@@ -1,4 +1,4 @@
-a# Machine Learning-Based Anomaly Detection for Hardware Trojans using Ring Oscillator Networks
+# Machine Learning-Based Anomaly Detection for Hardware Trojans using Ring Oscillator Networks
 
 ## Overview
 
