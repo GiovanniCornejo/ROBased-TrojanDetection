@@ -34,18 +34,18 @@ This project develops machine learning-based classifiers to detect hardware Troj
 
 - **Objective**: Train solely on golden data to detect anomalies.
 - **Process**:
-    - Golden data is extracted and split into training and testing sets.
-    - An Isolation Forest classifier is trained with contamination and feature subset settings.
-    - Evaluation over 20 trials per training sample size, with metrics aggregated and visualized.
+  - Golden data is extracted and split into training and testing sets.
+  - An Isolation Forest classifier is trained with contamination and feature subset settings.
+  - Evaluation over 20 trials per training sample size, with metrics aggregated and visualized.
 - **Output**: Classification summary with performance metrics including accuracy, precision, F1 score, TNR, TPR, FPR, and FNR for different RO subsets (RO5-RO8), as well as confusion matrices.
 
 ### Case 3: SVM + KNN Ensemble
 
 - **Objective**: Handle unlabeled data using a hybrid model.
 - **Process**:
-    - One-Class SVM detects primary anomalies in scaled, imputed RO data.
-    - KNN evaluates the proximity of anomalies to labeled data to improve differentiation.
-    - K-Means clustering segments anomalies into distinct categories.
+  - One-Class SVM detects primary anomalies in scaled, imputed RO data.
+  - KNN evaluates the proximity of anomalies to labeled data to improve differentiation.
+  - K-Means clustering segments anomalies into distinct categories.
 - **Output**: Classification summary with performance metrics including TNR, TPR, FPR, and FNR, as well as confusion matrices.
 
 ## Usage
