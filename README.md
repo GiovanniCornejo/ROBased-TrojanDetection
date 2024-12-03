@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project develops machine learning-based classifiers to detect hardware Trojans by analyzing ring oscillator (RO) frequency variations. Trojans in intregrated circuits (ICs) can result in malicious modifications that compromise chip security and functionality. Our classifiers leverage RO frequency data to identify anomalies caused by Trojan activity, such as localized power consumption variations.
+This project develops machine learning-based classifiers to detect hardware Trojans by analyzing ring oscillator (RO) frequency variations. Trojans in integrated circuits (ICs) can result in malicious modifications that compromise chip security and functionality. Our classifiers leverage RO frequency data to identify anomalies caused by Trojan activity, such as localized power consumption variations.
 
 ## Project Structure
 
@@ -11,8 +11,8 @@ This project develops machine learning-based classifiers to detect hardware Troj
 `ROFReq` contains RO frequency data for 33 chips, where:
 
 - Rows correspond to Trojan-free or Trojan-inserted states.
-  - **Golden (Trojan-free) Data**: Rows 1 and 25 in each chip file.
-  - **Trojan-inserted Data**: Rows 2 through 24 in each chip file.
+    - **Golden (Trojan-free) Data**: Rows 1 and 25 in each chip file.
+    - **Trojan-inserted Data**: Rows 2 through 24 in each chip file.
 - Columns represent frequencies of eight ROS (RO1-RO8) in the network.
 
 ### Notebooks
@@ -22,11 +22,11 @@ This project develops machine learning-based classifiers to detect hardware Troj
 - Feature subset experimentation (e.g., RO1-RO4, RO5-RO8, all ROs)
 - Metrics such as accuracy, precision, and recall across 20 trials with different training sample sizes (6, 12, 24 chips).
 
-`case_3.ipynb` addresses the scenario where all samples are unlabeled, using an SVM + K-Means ensemble approach:
+`case_3.ipynb` addresses the scenario where all samples are unlabeled, using an SVM + KNN ensemble approach:
 
-- **One-Class SVM** detects primary anomalies (Trojan-inserted or otherwise unusual).
-- **K-Means Clustering** on anomalies distinguishes Trojan-inserte samples from other unknown anomalies.
-- Extended labels (Golden, Trojan-inserted, Mixture) are assigned for detailed classification.
+- **One-Class SVM** detects primary anomalies, identifying Trojan-inserted or otherwise unusual samples.
+- **K-Nearest Neighbors** refines the classification by considering the proximity of points to differentiate between Trojan-inserted samples and normal anomalies.
+- **K-Means Clustering** is applied as a post-processing step to further segment data into groups.
 
 ## Methodology
 
@@ -34,19 +34,19 @@ This project develops machine learning-based classifiers to detect hardware Troj
 
 - **Objective**: Train solely on golden data to detect anomalies.
 - **Process**:
-  - Golden data is extracted and split into training and testing sets.
-  - An Isolation Forest classifier is trained with contamination and feature subset settings.
-  - Evaluation over 20 trials per training sample size, with metrics aggregated and visualized.
-- **Output**: Detection accuracy, precision, recall for different RO subsets.
+    - Golden data is extracted and split into training and testing sets.
+    - An Isolation Forest classifier is trained with contamination and feature subset settings.
+    - Evaluation over 20 trials per training sample size, with metrics aggregated and visualized.
+- **Output**: Classification summary with performance metrics including accuracy, precision, F1 score, TNR, TPR, FPR, and FNR for different RO subsets (RO5-RO8), as well as confusion matrices.
 
-### Case 3: SVM + K-Means Ensemble
+### Case 3: SVM + KNN Ensemble
 
 - **Objective**: Handle unlabeled data using a hybrid model.
 - **Process**:
-  - One-Class SVM detects primary anomalies in scaled, imputed RO data.
-  - K-Means clustering segments anomalies into Trojan-inserted and mixes categories.
-  - Extended labels (Golden, Trojan-inserted, Mixture) are assigned an visualized using PCA.
-- **Output**: Classification summary, cluster distribution, and visualization of anomalies.
+    - One-Class SVM detects primary anomalies in scaled, imputed RO data.
+    - KNN evaluates the proximity of anomalies to labeled data to improve differentiation.
+    - K-Means clustering segments anomalies into distinct categories.
+- **Output**: Classification summary with performance metrics including TNR, TPR, FPR, and FNR, as well as confusion matrices.
 
 ## Usage
 
@@ -65,25 +65,25 @@ jupyter notebook
 ```
 
 - `case_2.ipynb` for training and evaluating an Isolation Forest with golden data.
-- `case_3.ipynb` for an SVM + K-Means ensemble on unlabeled data.
+- `case_3.ipynb` for an SVM + KNN ensemble on unlabeled data.
 
 ## Results
 
 ### Comparison of Performance Metrics
 
-| **Metric**    | **Case 2 (Isolation Forest)** | **Case 3 (SVM + K-Means Ensemble)** |
-| ------------- | ----------------------------- | ----------------------------------- |
-| **TNR**       | 92.41%                        | 64.41%                              |
-| **TPR**       | 4.17%                         | 97.69%                              |
-| **FPR**       | 7.59%                         | 35.59%                              |
-| **FNR**       | 95.83%                        | 2.31%                               |
-| **Accuracy**  | 90.26%                        | 81.85%                              |
-| **Precision** | 1.79%                         | 75.15%                              |
-| **F1 Score**  | 2.60%                         | 84.95%                              |
+| **Metric**     | **Case 2 (Isolation Forest)**  | **Case 3 (SVM + KNN Ensemble)**      |
+| -------------- | ------------------------------ | ------------------------------------ |
+| **TNR**        | 92.41%                         | 64.41%                               |
+| **TPR**        | 4.17%                          | 97.69%                               |
+| **FPR**        | 7.59%                          | 35.59%                               |
+| **FNR**        | 95.83%                         | 2.31%                                |
+| **Accuracy**   | 90.26%                         | 81.85%                               |
+| **Precision**  | 1.79%                          | 75.15%                               |
+| **F1 Score**   | 2.60%                          | 84.95%                               |
 
 ### Observations
 
-- **True Positive Rate (TPR)**: The SVM + K-Means ensemble in Case 3 demonstrates superior performance in detecting Trojan-inserted chips, achieving a high TPR. In contrast, Case 2 with Isolation Forest performs poorly in this regard, with a TPR.
+- **True Positive Rate (TPR)**: The SVM + KNN ensemble in Case 3 demonstrates superior performance in detecting Trojan-inserted chips, achieving a high TPR. In contrast, Case 2 with Isolation Forest performs poorly in this regard, with a much lower TPR.
 
 - **False Positive Rate (FPR)**: Although Case 3 excels in identifying Trojan-inserted chips, it also introduces more false positives, as shown by its higher FPR. Case 2, which is trained solely on golden data, is more conservative, resulting in a lower FPR.
 
